@@ -1,0 +1,46 @@
+﻿<Window x:Class="XMLParser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XMLParser"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="90" Width="520">
+    <DockPanel Margin="10" MinWidth="500" MinHeight="40">
+        <WrapPanel Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center">
+            <TextBox x:Name="txbFileName" IsReadOnly="True" Text="Selecione o arquivo" MinWidth="400"></TextBox>
+            <Button x:Name="btnFileOpen" Click="OpenFile" Content="Abrir" Margin="10,0,0,0"></Button>
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal" Visibility="Collapsed" x:Name="mainStack">
+            <TreeView x:Name="elementsTree">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Title}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Items.Count, StringFormat=[{0}]}" Foreground="LawnGreen" Margin="2,0,0,0"></TextBlock>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding ElementName=elementsTree, Path=SelectedItem.Title}"></TextBlock>
+                <TextBlock Text="{Binding ElementName=elementsTree, Path=SelectedItem.Text}"></TextBlock>
+                <Label Content="Attributes" FontWeight="Bold"></Label>
+                <ListView x:Name="lsvAttributes" ItemsSource="{Binding Path=SelectedItem.Attributes, ElementName=elementsTree}" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Key}"></GridViewColumn>
+                            <GridViewColumn Header="Valor" DisplayMemberBinding="{Binding Value}"></GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>
